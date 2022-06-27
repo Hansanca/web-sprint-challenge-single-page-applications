@@ -6,24 +6,24 @@ const pizzaSizes = ["small", "medium", "large"];
 
 const PizzaForm = () => {
   const [pizzaDetails, setPizzaDetails] = useState({
-    name: "",
-    size: "",
+    "name-input": "",
+    "size-dropdown" : "",
     toppings: [],
-    custom: "",
+    "special-text": "",
   });
 
   function handleNameUpdate(event){
-    setPizzaDetails(prevS => ({
-        ...prevS,
-        name: event.target.value
-    }))
+    setPizzaDetails({
+        ...pizzaDetails,
+        [event.target.id]: event.target.value
+    })
   }
 
   function handleCustomUpdate(event){
-    setPizzaDetails(prevS => ({
-        ...prevS,
-        custom: event.target.value
-    }))
+    setPizzaDetails({
+      ...pizzaDetails,
+      [event.target.id]: event.target.value
+  })
   }
 
   function handleToppings(topping){
@@ -36,16 +36,17 @@ const PizzaForm = () => {
         updatedToppings = [...pizzaDetails.toppings, topping]
     }
         console.log(topping)
-        setPizzaDetails(prevS => ({
-            ...prevS,
+        setPizzaDetails({
+            ...pizzaDetails,
             toppings: updatedToppings
-        }))
+        })
   }
+  
   function handleSizeChange(event){
-    setPizzaDetails(prevS => ({
-        ...prevS,
-        size: event.target.value
-    }))
+    setPizzaDetails({
+      ...pizzaDetails,
+      [event.target.id]: event.target.value
+  })
   }
 
   function submitForm(e){
@@ -61,6 +62,9 @@ const PizzaForm = () => {
     console.log(dataObj)
     
     axios.post('https://reqres.in/api/orders', dataObj)
+    .then(res => {
+      console.log(res.data);
+    })
   }
 
   return (
@@ -70,15 +74,15 @@ const PizzaForm = () => {
       <form id="pizza-form" onSubmit={submitForm}>
         Your Name
         <br />
-        <input id="name-input" value={pizzaDetails.name} onChange={handleNameUpdate} />
+        <input id="name-input" value={pizzaDetails['name-input']} onChange={handleNameUpdate} />
         <br />
-       {pizzaDetails.name.length < 2 ? <small style={{ color: "red" }}>
+       {pizzaDetails['name-input'].length < 2 ? <small style={{ color: "red" }}>
        name must be at least 2 characters
         </small> : null}
         <br />
         Select your size:
         <br />
-        <select id="size-dropdown" value={pizzaDetails.size} onChange={handleSizeChange}>
+        <select id="size-dropdown" value={pizzaDetails['size-dropdown']} onChange={handleSizeChange}>
           {pizzaSizes.map((ps) => (
             <option key={ps} value={ps}>{ps}</option>
           ))}
@@ -93,7 +97,7 @@ const PizzaForm = () => {
       
         <br />
         Custom
-        <input id="special-text"  value={pizzaDetails.custom} onChange={handleCustomUpdate} />
+        <input id="special-text"  value={pizzaDetails['special-text']} onChange={handleCustomUpdate} />
 
 
         <br />
